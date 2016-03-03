@@ -7,9 +7,6 @@ module.exports = function(server) {
   var doorSensorQuery = server.where({ type: 'door' });
   server.observe([doorSensorQuery], function(doorSensor){
     doorSensor.style = {};
-    // wrap it in a WebSockets monitor
-    doorSensor._initMonitor('style');
-    doorSensor._monitors.push('style');
     
     // add property to track state image
     doorSensor.style.stateImage = DOOR_CLOSED_IMAGE_URL;
