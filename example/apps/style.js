@@ -1,32 +1,26 @@
 var extend = require('node.extend');
+var util = require('util');
 
-var DOOR_CLOSED_IMAGE_URL = 'https://cdn0.iconfinder.com/data/icons/mobile-development-svg-icons/60/closed_door-512.png';
-var DOOR_OPENED_IMAGE_URL = 'https://cdn0.iconfinder.com/data/icons/mobile-development-svg-icons/60/open_door-512.png';
+var IMAGE_URL_ROOT = 'http://www.zettaapi.org/icons/';
+var IMAGE_EXTENSION = '.png';
+
+var imageForTypeState = function(type, state) {
+  return IMAGE_URL_ROOT + type + '-' + state + IMAGE_EXTENSION;
+}
 
 module.exports = function(server) {
-  var doorSensorQuery = server.where({ type: 'door' });
-  server.observe([doorSensorQuery], function(doorSensor){
-    doorSensor.style = {};
-    
-    // add property to track state image
-    doorSensor.style.stateImage = DOOR_CLOSED_IMAGE_URL;
-    doorSensor.style.brandColors = {
-      primary: {
-        decimal: {
-          red: 232, 
-          green: 70,
-          blue: 37
-        }, 
-        hex: '#E84625'
-      }
-    };
-    // change the state image when door changes state
-    doorSensor.on('force-mock-close', function(s) {
-      doorSensor.style = extend(doorSensor.style, {stateImage: DOOR_CLOSED_IMAGE_URL});
+  var deviceType = 'door'
+  var deviceQuery = server.where({ type: deviceType });
+  server.observe([deviceQuery], function(device){
+    var stateStream = device.createReadStream('state');
+
+    // add property to track style
+    device.style = {};
+    stateStream.on('data', function(newState) {
+      device.style = extend(
+        device.style, 
+        {stateImage: imageForTypeState(deviceType, newState.data)}
+      );
     });
-    doorSensor.on('force-mock-open', function(s) {
-      doorSensor.style = extend(doorSensor.style, {stateImage: DOOR_OPENED_IMAGE_URL});
-    });
-   }
-  );
+  });
 };
