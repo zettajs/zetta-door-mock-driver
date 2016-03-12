@@ -9,25 +9,25 @@ util.inherits(Door, Device);
 Door.prototype.init = function(config) {
   config
     .name('Door')
-    .state('closed')
     .type('door')
-    .when('opened', {allow: ['force-mock-close']})
-    .when('closed', {allow: ['force-mock-open']})
-    .map('force-mock-open', this.forceMockOpen)
-    .map('force-mock-close', this.forceMockClose);
-    
+    .state('closed')
+    .when('opened', {allow: ['close']})
+    .when('closed', {allow: ['open']})
+    .map('open', this.open)
+    .map('close', this.close);
+
   var self = this;
   setInterval(function() {
-    self.state == 'closed' ? self.call('force-mock-open') : self.call('force-mock-close');
+    self.state == 'closed' ? self.state = 'opened' : self.state = 'closed';
   }, 5000);
 };
 
-Door.prototype.forceMockOpen = function (cb) {
+Door.prototype.open = function(cb) {
   this.state = 'opened';
   cb();
 }
 
-Door.prototype.forceMockClose = function (cb) {
-  this.state = 'closed';
+Door.prototype.close = function(cb) {
+  this.state = 'closed'
   cb();
 }
