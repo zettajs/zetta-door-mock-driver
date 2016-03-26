@@ -5,5 +5,4 @@ var style = require('./apps/style');
 zetta()
   .use(Door)
   .use(style)
-  .properties({style: {backgroundColor: "#fff"}})
   .listen(1337);

@@ -16,10 +16,6 @@ Door.prototype.init = function(config) {
     .map('open', this.open)
     .map('close', this.close);
 
-  var self = this;
-  setInterval(function() {
-    self.state == 'closed' ? self.state = 'opened' : self.state = 'closed';
-  }, 5000);
 };
 
 Door.prototype.open = function(cb) {
