@@ -1,6 +1,6 @@
 {
   "name": "zetta-door-mock-driver",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Mock Zetta door system.",
   "main": "index.js",
   "scripts": {
